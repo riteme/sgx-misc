@@ -213,6 +213,7 @@ int SGX_CDECL main(int argc, char *argv[])
     sgx_status_t ret = SGX_ERROR_UNEXPECTED;
     ret = ecall_loop(global_eid);
     if (ret != SGX_SUCCESS) {
+        printf("ret = %llx\n", ret);
         print_error_message(ret);
         return -1;
     }
