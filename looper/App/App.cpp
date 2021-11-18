@@ -178,6 +178,10 @@ void ocall_print_string(const char *str)
     /* Proxy/Bridge will check the length and null-terminate
      * the input string to prevent buffer overflow.
      */
+    static int ocnt = 0;
+    printf("ocnt = %d, &ocnt = %llx\n", ocnt, &ocnt);
+    ocnt++;
+
     printf("%s", str);
 }
 
@@ -193,8 +197,8 @@ int SGX_CDECL main(int argc, char *argv[])
     (void)(argc);
     (void)(argv);
 
-    printf("use fg to continue...\n");
-    raise(SIGTSTP);
+    // printf("use fg to continue...\n");
+    // raise(SIGTSTP);
 
     /* Initialize the enclave */
     if(initialize_enclave() < 0){

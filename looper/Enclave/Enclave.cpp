@@ -49,12 +49,12 @@ void printf(const char *fmt, ...)
     ocall_print_string(buf);
 }
 
-static int cnt = 0;
+static int ecnt = 0;
 
 void ecall_loop() {
     while (1) {
-        printf("cnt=%d, &cnt=%llx\n", cnt, &cnt);
-        cnt++;
+        printf("ecnt = %d, &ecnt = %llx\n", ecnt, &ecnt);
+        ecnt++;
         ocall_sleep(1000000);
     }
 }
