@@ -4,6 +4,7 @@ enclave {
 
     trusted {
         public void ecall_loop(void);
+        public void ecall_spin(void);
     };
 
     untrusted {

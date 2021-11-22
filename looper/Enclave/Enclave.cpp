@@ -49,12 +49,20 @@ void printf(const char *fmt, ...)
     ocall_print_string(buf);
 }
 
-static int ecnt = 0;
+static unsigned long long ecnt = 0;
 
 void ecall_loop() {
     while (1) {
-        printf("ecnt = %d, &ecnt = %llx\n", ecnt, &ecnt);
+        printf("ecnt = %llu, &ecnt = %p\n", ecnt, &ecnt);
         ecnt++;
         ocall_sleep(1000000);
+    }
+}
+
+void ecall_spin() {
+    while (1) {
+        ecnt++;
+        if (ecnt % 10000000000 == 0)
+            printf("ecnt = %llu, &ecnt = %p\n", ecnt, &ecnt);
     }
 }

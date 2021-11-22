@@ -179,7 +179,7 @@ void ocall_print_string(const char *str)
      * the input string to prevent buffer overflow.
      */
     static int ocnt = 0;
-    printf("ocnt = %d, &ocnt = %llx\n", ocnt, &ocnt);
+    printf("ocnt = %d, &ocnt = %p\n", ocnt, &ocnt);
     ocnt++;
 
     printf("%s", str);
@@ -191,6 +191,36 @@ void ocall_sleep(unsigned int usec) {
 
 #include <signal.h>
 
+void prompt(const char *message) {
+    printf("%s:", message);
+    while (getchar() != '\n') {}
+}
+
+void loop() {
+    prompt("enter ecall_loop");
+
+    /* Utilize trusted libraries */
+    // ecall_libcxx_functions();
+    sgx_status_t ret = SGX_ERROR_UNEXPECTED;
+    ret = ecall_loop(global_eid);
+    if (ret != SGX_SUCCESS) {
+        printf("ret = %x\n", ret);
+        print_error_message(ret);
+        exit(-1);
+    }
+}
+
+void spin() {
+    prompt("enter ecall_spin");
+
+    sgx_status_t ret = ecall_spin(global_eid);
+    if (ret != SGX_SUCCESS) {
+        printf("ret = %x\n", ret);
+        print_error_message(ret);
+        exit(-1);
+    }
+}
+
 /* Application entry */
 int SGX_CDECL main(int argc, char *argv[])
 {
@@ -200,8 +230,7 @@ int SGX_CDECL main(int argc, char *argv[])
     // printf("use fg to continue...\n");
     // raise(SIGTSTP);
 
-    printf("initialize enclave:");
-    while (getchar() != '\n') {}
+    prompt("initialize enclave");
 
     /* Initialize the enclave */
     if(initialize_enclave() < 0){
@@ -210,18 +239,8 @@ int SGX_CDECL main(int argc, char *argv[])
         return -1;
     }
 
-    printf("enter ecall_loop:");
-    while (getchar() != '\n') {}
-
-    /* Utilize trusted libraries */
-    // ecall_libcxx_functions();
-    sgx_status_t ret = SGX_ERROR_UNEXPECTED;
-    ret = ecall_loop(global_eid);
-    if (ret != SGX_SUCCESS) {
-        printf("ret = %llx\n", ret);
-        print_error_message(ret);
-        return -1;
-    }
+    // loop();
+    spin();
 
     /* Destroy the enclave */
     sgx_destroy_enclave(global_eid);
