@@ -200,6 +200,9 @@ int SGX_CDECL main(int argc, char *argv[])
     // printf("use fg to continue...\n");
     // raise(SIGTSTP);
 
+    printf("initialize enclave:");
+    while (getchar() != '\n') {}
+
     /* Initialize the enclave */
     if(initialize_enclave() < 0){
         printf("Enter a character before exit ...\n");
@@ -207,6 +210,8 @@ int SGX_CDECL main(int argc, char *argv[])
         return -1;
     }
 
+    printf("enter ecall_loop:");
+    while (getchar() != '\n') {}
 
     /* Utilize trusted libraries */
     // ecall_libcxx_functions();
