@@ -224,8 +224,10 @@ void spin() {
 /* Application entry */
 int SGX_CDECL main(int argc, char *argv[])
 {
-    (void)(argc);
-    (void)(argv);
+    if (argc < 2) {
+        fprintf(stderr, "Usage: %s [loop/spin]\n", argv[0]);
+        return -1;
+    }
 
     // printf("use fg to continue...\n");
     // raise(SIGTSTP);
@@ -239,8 +241,10 @@ int SGX_CDECL main(int argc, char *argv[])
         return -1;
     }
 
-    // loop();
-    spin();
+    if (strcmp(argv[1], "loop") == 0)
+        loop();
+    else if (strcmp(argv[1], "spin") == 0)
+        spin();
 
     /* Destroy the enclave */
     sgx_destroy_enclave(global_eid);
